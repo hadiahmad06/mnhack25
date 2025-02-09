@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 
 // Set your Mapbox access token
-mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWtpbnktdW1uMzQiLCJhIjoiY202eDUyM2FyMGk5cTJqb256MnYwbDh5ayJ9.qb2pKgFp9t8SA3gYcUcd-w';
 
 const MapService = () => {
   // Ref to hold the map container element
