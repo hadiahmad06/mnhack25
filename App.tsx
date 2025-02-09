@@ -1,20 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// import logo from './logo.svg'
+import './App.css';
+import { Location, Profile } from './my-app/src/Models/Profile'
+import { ProfileCard } from './my-app/src/Components/ProfileCard'
 
-export default function App() {
+const LA: Location = {
+  latitude: 0,
+  longitude: 0,
+  address: "5128, Washington Ave",
+}
+
+const userProfile: Profile = {
+  name: "John Doe",
+  age: 28,
+  gender: 'male',
+  verification: true,
+  up: 120,
+  down: 5,
+  ratings: [],
+  origin: LA,
+  destinations: [LA]
+};
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <div className="App">
+      <header className="App-header">
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+        <ProfileCard user={userProfile} />
+        <p>
+          
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
