@@ -1,5 +1,4 @@
 // src/App.js
-
 import React from 'react';
 import './App.css';
 import MapService from '../Services/MapService'; // Import the MapComponent
