@@ -56,7 +56,7 @@ const open: Preferences = {
 }
 
 const currUser: Profile = {
-  image: "10.jpg",
+  image: "https://lalweb.blob.core.windows.net/public/lakers/product-marketing/web/player-page/2024-2025/2425_PlayerPage_Headshot_1920x2304_James_LeBron.jpg",
   preferences: open,
   name: "Lebron",
   age: 40,
@@ -71,7 +71,7 @@ const currUser: Profile = {
 
 const exampleUsers: Profile[] = [
   {
-    image: "../../assets/icon.png",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/LeBron_James_%2851959977144%29_%28cropped2%29.jpg/800px-LeBron_James_%2851959977144%29_%28cropped2%29.jpg",
     preferences: open,
     name: "John Doe",
     age: 28,
@@ -84,7 +84,7 @@ const exampleUsers: Profile[] = [
     destinations: [MPLS, BLOO],
   },
   {
-    image: "../../assets/example_profiles/2.jpg",
+    image: "https://media.npr.org/assets/img/2024/03/03/ap24063160825614-9d604c3b01e95a989b89bed8184091ab0c967ef3.jpg",
     preferences: open,
     name: "Jane Smith",
     age: 25,
@@ -97,7 +97,7 @@ const exampleUsers: Profile[] = [
     destinations: [MPLS, DULU],
   },
   {
-    image: "../../assets/example_profiles/3.jpg",
+    image: "https://www.usab.com/imgproxy/KnQWx9iFYyACozUo58mGmx6dnvNqzv3SJZfTOyKgh6U/rs:fit:3000:0:0:g:ce/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3VzYWItY29tLXByb2QvdXBsb2FkLzIwMjQvMDcvMDkvMDI1NTQ0YzgtNjgzYS00ZWJjLThhYTAtYTdjOTFmZTU3ODhjLmpwZw.png",
     preferences: open,
     name: "Alice Johnson",
     age: 30,
@@ -169,7 +169,10 @@ const App = () => {
         />
       ) : activeTab === "settings" ? (
         <View style={styles.settingsContainer}>
-          <PreferencesView/>
+          <PreferencesView 
+          user={currUser}
+          onPreferencesChange={handlePreferencesChange}
+          />
         </View>
       ) : null}
       <FooterView activeTab={activeTab} onTabPress={setActiveTab} />

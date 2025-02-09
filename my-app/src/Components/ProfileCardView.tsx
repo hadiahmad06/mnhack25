@@ -2,7 +2,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import { Profile } from "../Models/Profile";
-
 // Get screen dimensions
 const { width, height } = Dimensions.get("window");
 
@@ -11,14 +10,12 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
     return <Text style={styles.noDataText}>No profile data available.</Text>;
   }
 
-  //const dir = null;//user.image ? require(`../../../assets/example_profiles/${user.image}`) : null;
-
   return (
     <View style={styles.cardContainer}>
       {/* Profile Image */}
       <View style={styles.imageContainer}>
         {user.image ? (
-          <Image source={{ uri: user.image }} style={styles.profileImage} />
+          <Image source={{uri: user.image}} style={styles.profileImage} />
         ) : (
           <View style={styles.emptyImage}>
             <Text style={styles.emptyImageText}>No Image</Text>
@@ -38,6 +35,10 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
           </View>
         </View>
         <Text style={styles.detailText}>{user.gender}, {user.age}</Text>
+        <View style={styles.locationContainer}>
+          <Text style={styles.locationText}>From: {user.origin.city}</Text>
+          <Text style={styles.locationText}>To: {user.destinations.map(dest => dest.city).join(" & ")}</Text>
+        </View>
         <Text
           style={[
             styles.verificationText,
@@ -46,7 +47,7 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
         >
           {user.verification ? "✓" : "⚠️ Unverified"}
         </Text>
-
+          
         {user.down > user.up && <Text style = {styles.flag}>🚩</Text>}
       </View>
     </View>
@@ -54,6 +55,15 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
 };
 
 const styles = StyleSheet.create({
+
+  locationContainer: { // Style for the container
+    marginTop: 8, // Add some spacing
+},
+locationText: {
+  fontSize: 14,
+  color: "#777", // A slightly lighter color
+  marginBottom: 4, // Space between origin and destinations
+},
   cardContainer: {
     flex: 1,
     width: width,
@@ -106,6 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "600",
     marginBottom: 8,
+    marginLeft: 9,
   },
   verified: {
     color: "green",

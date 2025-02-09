@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Dimensions,
   StyleSheet,
   SafeAreaView,
   ScrollView,
@@ -13,16 +14,17 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { Preferences, Profile } from '../Models/Profile'; // Adjust the import path as needed
 
 interface PreferencesViewProps {
-  preferences: Preferences;
+  user: Profile
   onPreferencesChange: (updatedPreferences: Preferences) => void;
 }
 
-export const PreferencesView: React.FC<PreferencesViewProps> = ({ preferences, onPreferencesChange }) => {
+export const PreferencesView: React.FC<PreferencesViewProps> = ({ user, onPreferencesChange }) => {
   const [form, setForm] = useState({
-    darkMode: false,
     emailNotifications: true,
     pushNotifications: false,
   });
+
+  const { width } = Dimensions.get("window");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -32,13 +34,13 @@ export const PreferencesView: React.FC<PreferencesViewProps> = ({ preferences, o
             // handle onPress
           }}>
           <View style={styles.profileAvatarWrapper}>
-            <Image
-              alt=""
-              source={{
-                uri: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
-              }}
-              style={styles.profileAvatar}
-            />
+            {user.image ? (
+              <Image source={{uri: user.image}} style={styles.profileAvatar} />
+            ) : (
+              <View style={styles.profileAvatar}>
+                <Text style={styles.profileAvatar}>No Image</Text>
+              </View>
+            )}
 
             <TouchableOpacity
               onPress={() => {
@@ -53,9 +55,9 @@ export const PreferencesView: React.FC<PreferencesViewProps> = ({ preferences, o
 
         <View>
           <Text style={styles.profileName}>John Doe</Text>
-          <Text style={styles.profileAddress}>
-            123 Maple Street. Anytown, PA 17101
-          </Text>
+            <Text style={styles.profileAddress}>
+                {user.origin.city ? user.origin.city : "Hidden Location"}
+            </Text>
         </View>
       </View>
 
@@ -78,21 +80,6 @@ export const PreferencesView: React.FC<PreferencesViewProps> = ({ preferences, o
 
             <FeatherIcon color="#C6C6C6" name="chevron-right" size={20} />
           </TouchableOpacity>
-
-          <View style={styles.row}>
-            <View style={[styles.rowIcon, { backgroundColor: '#007afe' }]}>
-              <FeatherIcon color="#fff" name="moon" size={20} />
-            </View>
-
-            <Text style={styles.rowLabel}>Dark Mode</Text>
-
-            <View style={styles.rowSpacer} />
-
-            <Switch
-              onValueChange={(darkMode) => setForm({ ...form, darkMode })}
-              value={form.darkMode}
-            />
-          </View>
 
           <TouchableOpacity
             onPress={() => {
@@ -184,7 +171,7 @@ export const PreferencesView: React.FC<PreferencesViewProps> = ({ preferences, o
             onPress={() => {
               // handle onPress
             }}
-            style={styles.row}>
+            style={[styles.row, { width }]}>
             <View style={[styles.rowIcon, { backgroundColor: '#32c759' }]}>
               <FeatherIcon color="#fff" name="star" size={20} />
             </View>
