@@ -1,15 +1,15 @@
-// src/Components/ChatView.tsx
 import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
+  ImageBackground,
   StyleSheet,
 } from "react-native";
+// import BG from "../../../assets/images/BG.png";
 
-// Message type definition
 type Message = {
   id: string;
   text: string;
@@ -17,7 +17,6 @@ type Message = {
   time: string;
 };
 
-// ChatView component
 const ChatView = () => {
   const [messages, setMessages] = useState<Message[]>([
     { id: "1", text: "Hello!", sent: true, time: "09:30" },
@@ -28,33 +27,20 @@ const ChatView = () => {
 
   const sendMessage = () => {
     if (newMessage.trim()) {
-      const newMsg: Message = {
+      const message: Message = {
         id: String(messages.length + 1),
         text: newMessage,
         sent: true,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-      setMessages([...messages, newMsg]);
+      setMessages([message, ...messages]);
       setNewMessage("");
     }
   };
-
+  const bg = {uri: '../../../assets/images/BG.png'};
   return (
-    <View style={styles.chatContainer}>
-      <ScrollView style={styles.messagesList}>
-        {messages.map((message) => (
-          <View
-            key={message.id}
-            style={[
-              styles.messageBubble,
-              message.sent ? styles.sentBubble : styles.receivedBubble,
-            ]}
-          >
-            <Text style={styles.messageText}>{message.text}</Text>
-            <Text style={styles.messageTime}>{message.time}</Text>
-          </View>
-        ))}
-      </ScrollView>
+    <ImageBackground style={styles.background} source={bg}>
+      {/* <FlatList data={messages} renderItem={({ item }) => <ChatMessage message={item} />} inverted /> */}
       <View style={styles.messageInputContainer}>
         <TextInput
           style={styles.input}
@@ -63,54 +49,24 @@ const ChatView = () => {
           placeholder="Type a message..."
           onSubmitEditing={sendMessage}
         />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={sendMessage}
-          disabled={!newMessage.trim()}
-        >
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={!newMessage.trim()}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
-  chatContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  messagesList: {
-    flex: 1,
-  },
-  messageBubble: {
-    maxWidth: "80%",
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  sentBubble: {
-    alignSelf: "flex-end",
-    backgroundColor: "#007bff",
-  },
-  receivedBubble: {
-    alignSelf: "flex-start",
-    backgroundColor: "#e9ecef",
-  },
-  messageText: {
-    fontSize: 16,
-    color: "#fff",
-  },
-  messageTime: {
-    fontSize: 12,
-    color: "#ddd",
-    marginTop: 4,
+  background: {
+    width: "100%",
+    height: "100%",
   },
   messageInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 16,
+    padding: 12,
+    backgroundColor: "white",
   },
   input: {
     flex: 1,

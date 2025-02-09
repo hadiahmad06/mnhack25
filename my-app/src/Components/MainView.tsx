@@ -15,13 +15,12 @@ interface MainViewProps {
 }
 
 export const MainView: React.FC<MainViewProps> = ({ users, currentIndex, handleSwipeLeft, handleSwipeRight, currUser, setCurrentUser }) => {
-  const { height } = Dimensions.get("window");
 
   return (
-    <View style={[styles.swiperContainer, { maxHeight: height - 0 }]}> {/* Replace 100 with actual Footer height */}
+    <View style={[styles.swiperContainer]}>
       <Swiper
         cards={users}
-        renderCard={(card) => <ProfileCard user={card} />}
+        renderCard={(card) => <ProfileCard bottomMargin={100} user={card}/>}
         onSwipedLeft={handleSwipeLeft}
         onSwipedRight={handleSwipeRight}
         cardIndex={currentIndex}
@@ -76,6 +75,7 @@ export const MainView: React.FC<MainViewProps> = ({ users, currentIndex, handleS
 const styles = StyleSheet.create({
   swiperContainer: {
     flex: 1,
+    zIndex: -1
   },
 });
 

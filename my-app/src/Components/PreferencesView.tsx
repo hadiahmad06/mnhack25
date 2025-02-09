@@ -1,125 +1,132 @@
-// src/Components/PreferencesForm.tsx
+// src/Components/PreferencesView.tsx
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Switch, Platform } from "react-native";
-import { Gender, Preferences } from "../Models/Profile";
-import { Formik } from 'formik'; // For form handling and validation
-import * as Yup from 'yup'; // For validation schema
+import { View, Text, StyleSheet, Switch, ScrollView } from "react-native";
+import { Button } from "react-native-elements";
+import { Preferences } from "../Models/Profile";
+import Slider from "@react-native-community/slider";
 
-interface GenderPreference {
-  gender: Gender;
-  preferred: boolean;
+interface PreferencesFormProps {
+  prefs: Preferences;
+  onSave: (updatedPrefs: Preferences) => void;
 }
+values
+const PreferencesForm: React.FC<PreferencesFormProps> = ({ prefs, onSave }) => {
+  const [preferences, setPreferences] = useState(prefs);
 
-const genderOptions: Gender[] = ["male", "female", "nb", "other"];
+  const handleInputChange = (field: keyof Preferences, value: any) => {
+    setPreferences({ ...preferences, [field]: value });
+  };
 
-const validationSchema = Yup.object().shape({
-  minRiders: Yup.number().integer().min(0, "Min riders must be at least 0").required("Required"),
-  maxRiders: Yup.number().integer().min(0, "Max riders must be at least 0").nullable(), // Allow null for no preference
-  minAge: Yup.number().integer().min(0, "Min age must be at least 0").required("Required"),
-  maxAge: Yup.number().integer().min(0, "Max age must be at least 0").nullable(), // Allow null for no preference
-  maxExtraTime: Yup.number().integer().min(0, "Max extra time must be at least 0").nullable(), // Allow null for no preference
-});
-
-
-export const PreferencesForm: React.FC<{ prefs: Preferences; onSave: (prefs: Preferences) => void }> = ({
-  prefs,
-  onSave,
-}) => {
-
+  const handleGenderChange = (value: string) => {
+    const currentGenderPrefs = [...preferences.genderPreferences];
+    if (currentGenderPrefs.includes(value)) {
+      const newGenderPrefs = currentGenderPrefs.filter(gender => gender !== value)
+      setPreferences({ ...preferences, genderPreferences: newGenderPrefs });
+    } else {
+      currentGenderPrefs.push(value);
+      setPreferences({ ...preferences, genderPreferences: currentGenderPrefs });
+    }
+  }
 
   return (
-    <Formik
-      initialValues={{
-        minRiders: prefs.minRiders.toString(),
-        maxRiders: prefs.maxRiders ? prefs.maxRiders.toString() : '',
-        minAge: prefs.minAge.toString(),
-        maxAge: prefs.maxAge ? prefs.maxAge.toString() : '',
-        verification: prefs.verification,
-        genderPreferences: genderOptions.map(gender => ({ 
-            gender, 
-            preferred: prefs.genderPreferences?.find(pref => pref.gender === gender)?.preferred || false 
-        })),
-        maxExtraTime: prefs.maxExtraTime ? prefs.maxExtraTime.toString() : '',
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values) => {
-        const preferences: Preferences = {
-          minRiders: parseInt(values.minRiders, 10),
-          maxRiders: values.maxRiders ? parseInt(values.maxRiders, 10) : 0, // Handle empty string as 0
-          minAge: parseInt(values.minAge, 10),
-          maxAge: values.maxAge ? parseInt(values.maxAge, 10) : 0, // Handle empty string as 0
-          verification: values.verification,
-          genderPreferences: values.genderPreferences,
-          maxExtraTime: values.maxExtraTime ? parseInt(values.maxExtraTime, 10) : 0, // Handle empty string as 0
-        };
-        onSave(preferences);
-      }}
-    >
-      {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
-        <View style={styles.container}>
-          <Text style={styles.title}>Set Your Preferences</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.label}>Min Riders:</Text>
+      <Slider
+        minimumValue={1}
+        maximumValue={10}
+        step={1}
+        value={preferences.minRiders}
+        onValueChange={(value) => handleInputChange('minRiders', value)}
+      />
+      <Text>{preferences.minRiders}</Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label} htmlFor="minRiders">Min Riders:</Text>
-            <TextInput
-              style={[styles.input, touched.minRiders && errors.minRiders && styles.errorInput]}
-              keyboardType="numeric"
-              id="minRiders"
-              onChangeText={handleChange('minRiders')}
-              onBlur={handleBlur('minRiders')}
-              value={values.minRiders}
-            />
-            {touched.minRiders && errors.minRiders && (
-              <Text style={styles.errorText}>{errors.minRiders}</Text>
-            )}
-          </View>
+      <Text style={styles.label}>Max Riders (0 for unlimited):</Text>
+      <Slider
+        minimumValue={0}
+        maximumValue={20}
+        step={1}
+        value={preferences.maxRiders === 0 ? 0 : preferences.maxRiders || 1}
+        onValueChange={(value) => handleInputChange('maxRiders', value)}
+      />
+      <Text>{preferences.maxRiders === 0 ? "Unlimited" : preferences.maxRiders}</Text>
 
-          {/* ... (Other input groups - similar structure as minRiders) */}
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Gender Preferences:</Text>
-            {genderOptions.map((gender) => (
-              <TouchableOpacity
-                key={gender}
-                style={styles.genderOption}
-                onPress={() => setFieldValue('genderPreferences', values.genderPreferences.map(g =>
-                  g.gender === gender ? { ...g, preferred: !g.preferred } : g
-                ))}
-                accessible={true}
-                accessibilityRole="button"
-                aria-label={`Toggle preference for ${gender} gender`}
-              >
-                <Text style={styles.genderText}>{gender}</Text>
-                <View style={styles.checkbox}>
-                  {values.genderPreferences.find((g) => g.gender === gender)?.preferred && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+      <Text style={styles.label}>Min Age:</Text>
+      <Slider
+        minimumValue={0}
+        maximumValue={100}
+        step={1}
+        value={preferences.minAge}
+        onValueChange={(value) => handleInputChange('minAge', value)}
+      />
+      <Text>{preferences.minAge}</Text>
 
-          {/* ... (Max Extra Time input group) */}
+      <Text style={styles.label}>Max Age (0 for unlimited):</Text>
+      <Slider
+        minimumValue={0}
+        maximumValue={100}
+        step={1}
+        value={preferences.maxAge === 0 ? 0 : preferences.maxAge || 1}
+        onValueChange={(value) => handleInputChange('maxAge', value)}
+      />
+      <Text>{preferences.maxAge === 0 ? "Unlimited" : preferences.maxAge}</Text>
 
-          <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-            <Text style={styles.saveButtonText}>Save Preferences</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </Formik>
+      <Text style={styles.label}>Verification Required:</Text>
+      <Switch
+        value={preferences.verification}
+        onValueChange={(value) => handleInputChange('verification', value)}
+      />
+
+      <Text style={styles.label}>Gender Preferences:</Text>
+      <View>
+        <Button 
+          title={preferences.genderPreferences.includes('male') ? 'Unselect Male' : 'Select Male'}
+          onPress={() => handleGenderChange('male')}
+          type="outline"
+          style={styles.genderButton}
+        />
+        <Button 
+          title={preferences.genderPreferences.includes('female') ? 'Unselect Female' : 'Select Female'}
+          onPress={() => handleGenderChange('female')}
+          type="outline"
+          style={styles.genderButton}
+        />
+        <Button 
+          title={preferences.genderPreferences.includes('other') ? 'Unselect Other' : 'Select Other'}
+          onPress={() => handleGenderChange('other')}
+          type="outline"
+          style={styles.genderButton}
+        />
+      </View>
+
+      <Text style={styles.label}>Max Extra Time:</Text>
+      <Slider
+        minimumValue={0}
+        maximumValue={60}
+        step={5}
+        value={preferences.maxExtraTime}
+        onValueChange={(value) => handleInputChange('maxExtraTime', value)}
+      />
+      <Text>{preferences.maxExtraTime} minutes</Text>
+
+      <Button title="Save Preferences" onPress={() => onSave(preferences)} />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  // ... (Existing styles)
-  errorInput: {
-    borderColor: 'red',
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: 4,
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
   },
+  genderButton: {
+    marginVertical: 5,
+  }
 });
 
 export default PreferencesForm;

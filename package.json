@@ -16,6 +16,8 @@
     "react": "18.3.1",
     "react-native": "0.76.7",
     "react-native-deck-swiper": "^2.0.17",
+    "react-native-elements": "^3.4.3",
+    "react-native-vector-icons": "^10.2.0",
     "react-native-view-overflow": "^0.0.5",
     "yup": "^1.6.1"
   },

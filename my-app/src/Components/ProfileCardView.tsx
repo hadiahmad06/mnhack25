@@ -6,7 +6,7 @@ import { Profile } from "../Models/Profile";
 // Get screen dimensions
 const { width, height } = Dimensions.get("window");
 
-export const ProfileCard = ({ user }: { user: Profile }) => {
+export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: Profile }) => {
   if (!user) {
     return <Text style={styles.noDataText}>No profile data available.</Text>;
   }
