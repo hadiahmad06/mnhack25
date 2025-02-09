@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   receivedMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#a1a11",
+    backgroundColor: "#a1a1a1",
     padding: 8,
     borderRadius: 8,
     margin: 4,

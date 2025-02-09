@@ -25,6 +25,7 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
 
       {/* Profile Details */}
       <View style={[styles.detailsContainer, {justifyContent: "space-between", flexDirection: "column"}]}>
+      <View style={{flexDirection: "column"}}>
         <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
           <View style={{flexDirection: "row", alignItems: "center"}}>
             <Text style={styles.username}>{user.name}</Text>
@@ -35,6 +36,7 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
           </View>
         </View>
         <Text style={styles.detailText}>{user.gender}, {user.age}</Text>
+      </View>
         <View style={styles.locationContainer}>
           <Text style={styles.locationText}>From: {user.origin.city}</Text>
           <Text style={styles.locationText}>To: {user.destinations.map(dest => dest.city).join(" & ")}</Text>
