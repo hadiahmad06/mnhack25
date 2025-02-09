@@ -1,132 +1,287 @@
-// src/Components/PreferencesView.tsx
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Switch, ScrollView } from "react-native";
-import { Button } from "react-native-elements";
-import { Preferences } from "../Models/Profile";
-import Slider from "@react-native-community/slider";
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  Switch,
+  Image,
+} from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import { Preferences, Profile } from '../Models/Profile'; // Adjust the import path as needed
 
-interface PreferencesFormProps {
-  prefs: Preferences;
-  onSave: (updatedPrefs: Preferences) => void;
+interface PreferencesViewProps {
+  preferences: Preferences;
+  onPreferencesChange: (updatedPreferences: Preferences) => void;
 }
-values
-const PreferencesForm: React.FC<PreferencesFormProps> = ({ prefs, onSave }) => {
-  const [preferences, setPreferences] = useState(prefs);
 
-  const handleInputChange = (field: keyof Preferences, value: any) => {
-    setPreferences({ ...preferences, [field]: value });
-  };
-
-  const handleGenderChange = (value: string) => {
-    const currentGenderPrefs = [...preferences.genderPreferences];
-    if (currentGenderPrefs.includes(value)) {
-      const newGenderPrefs = currentGenderPrefs.filter(gender => gender !== value)
-      setPreferences({ ...preferences, genderPreferences: newGenderPrefs });
-    } else {
-      currentGenderPrefs.push(value);
-      setPreferences({ ...preferences, genderPreferences: currentGenderPrefs });
-    }
-  }
+export const PreferencesView: React.FC<PreferencesViewProps> = ({ preferences, onPreferencesChange }) => {
+  const [form, setForm] = useState({
+    darkMode: false,
+    emailNotifications: true,
+    pushNotifications: false,
+  });
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.label}>Min Riders:</Text>
-      <Slider
-        minimumValue={1}
-        maximumValue={10}
-        step={1}
-        value={preferences.minRiders}
-        onValueChange={(value) => handleInputChange('minRiders', value)}
-      />
-      <Text>{preferences.minRiders}</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={styles.profile}>
+        <TouchableOpacity
+          onPress={() => {
+            // handle onPress
+          }}>
+          <View style={styles.profileAvatarWrapper}>
+            <Image
+              alt=""
+              source={{
+                uri: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
+              }}
+              style={styles.profileAvatar}
+            />
 
-      <Text style={styles.label}>Max Riders (0 for unlimited):</Text>
-      <Slider
-        minimumValue={0}
-        maximumValue={20}
-        step={1}
-        value={preferences.maxRiders === 0 ? 0 : preferences.maxRiders || 1}
-        onValueChange={(value) => handleInputChange('maxRiders', value)}
-      />
-      <Text>{preferences.maxRiders === 0 ? "Unlimited" : preferences.maxRiders}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                // handle onPress
+              }}>
+              <View style={styles.profileAction}>
+                <FeatherIcon color="#fff" name="edit-3" size={15} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
 
-
-      <Text style={styles.label}>Min Age:</Text>
-      <Slider
-        minimumValue={0}
-        maximumValue={100}
-        step={1}
-        value={preferences.minAge}
-        onValueChange={(value) => handleInputChange('minAge', value)}
-      />
-      <Text>{preferences.minAge}</Text>
-
-      <Text style={styles.label}>Max Age (0 for unlimited):</Text>
-      <Slider
-        minimumValue={0}
-        maximumValue={100}
-        step={1}
-        value={preferences.maxAge === 0 ? 0 : preferences.maxAge || 1}
-        onValueChange={(value) => handleInputChange('maxAge', value)}
-      />
-      <Text>{preferences.maxAge === 0 ? "Unlimited" : preferences.maxAge}</Text>
-
-      <Text style={styles.label}>Verification Required:</Text>
-      <Switch
-        value={preferences.verification}
-        onValueChange={(value) => handleInputChange('verification', value)}
-      />
-
-      <Text style={styles.label}>Gender Preferences:</Text>
-      <View>
-        <Button 
-          title={preferences.genderPreferences.includes('male') ? 'Unselect Male' : 'Select Male'}
-          onPress={() => handleGenderChange('male')}
-          type="outline"
-          style={styles.genderButton}
-        />
-        <Button 
-          title={preferences.genderPreferences.includes('female') ? 'Unselect Female' : 'Select Female'}
-          onPress={() => handleGenderChange('female')}
-          type="outline"
-          style={styles.genderButton}
-        />
-        <Button 
-          title={preferences.genderPreferences.includes('other') ? 'Unselect Other' : 'Select Other'}
-          onPress={() => handleGenderChange('other')}
-          type="outline"
-          style={styles.genderButton}
-        />
+        <View>
+          <Text style={styles.profileName}>John Doe</Text>
+          <Text style={styles.profileAddress}>
+            123 Maple Street. Anytown, PA 17101
+          </Text>
+        </View>
       </View>
 
-      <Text style={styles.label}>Max Extra Time:</Text>
-      <Slider
-        minimumValue={0}
-        maximumValue={60}
-        step={5}
-        value={preferences.maxExtraTime}
-        onValueChange={(value) => handleInputChange('maxExtraTime', value)}
-      />
-      <Text>{preferences.maxExtraTime} minutes</Text>
+      <ScrollView>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Preferences</Text>
 
-      <Button title="Save Preferences" onPress={() => onSave(preferences)} />
-    </ScrollView>
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#fe9400' }]}>
+              <FeatherIcon color="#fff" name="globe" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Language</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color="#C6C6C6" name="chevron-right" size={20} />
+          </TouchableOpacity>
+
+          <View style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#007afe' }]}>
+              <FeatherIcon color="#fff" name="moon" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Dark Mode</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <Switch
+              onValueChange={(darkMode) => setForm({ ...form, darkMode })}
+              value={form.darkMode}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#32c759' }]}>
+              <FeatherIcon color="#fff" name="navigation" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Location</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color="#C6C6C6" name="chevron-right" size={20} />
+          </TouchableOpacity>
+
+          <View style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#38C959' }]}>
+              <FeatherIcon color="#fff" name="at-sign" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Email Notifications</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <Switch
+              onValueChange={(emailNotifications) =>
+                setForm({ ...form, emailNotifications })
+              }
+              value={form.emailNotifications}
+            />
+          </View>
+
+          <View style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#38C959' }]}>
+              <FeatherIcon color="#fff" name="bell" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Push Notifications</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <Switch
+              onValueChange={(pushNotifications) =>
+                setForm({ ...form, pushNotifications })
+              }
+              value={form.pushNotifications}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Resources</Text>
+
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#8e8d91' }]}>
+              <FeatherIcon color="#fff" name="flag" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Report Bug</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color="#C6C6C6" name="chevron-right" size={20} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#007afe' }]}>
+              <FeatherIcon color="#fff" name="mail" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Contact Us</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color="#C6C6C6" name="chevron-right" size={20} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={styles.row}>
+            <View style={[styles.rowIcon, { backgroundColor: '#32c759' }]}>
+              <FeatherIcon color="#fff" name="star" size={20} />
+            </View>
+
+            <Text style={styles.rowLabel}>Rate in App Store</Text>
+
+            <View style={styles.rowSpacer} />
+
+            <FeatherIcon color="#C6C6C6" name="chevron-right" size={20} />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
+  /** Profile */
+  profile: {
+    padding: 24,
+    backgroundColor: '#fff',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  label: {
+  profileAvatarWrapper: {
+    position: 'relative',
+  },
+  profileAvatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 9999,
+  },
+  profileAction: {
+    position: 'absolute',
+    right: -4,
+    bottom: -10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 28,
+    borderRadius: 9999,
+    backgroundColor: '#007bff',
+  },
+  profileName: {
+    marginTop: 20,
+    fontSize: 19,
+    fontWeight: '600',
+    color: '#414d63',
+    textAlign: 'center',
+  },
+  profileAddress: {
+    marginTop: 5,
     fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
+    color: '#989898',
+    textAlign: 'center',
   },
-  genderButton: {
-    marginVertical: 5,
-  }
+  /** Section */
+  section: {
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    paddingVertical: 12,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#9e9e9e',
+    textTransform: 'uppercase',
+    letterSpacing: 1.1,
+  },
+  /** Row */
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height: 50,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 8,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+  },
+  rowIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 9999,
+    marginRight: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rowLabel: {
+    fontSize: 17,
+    fontWeight: '400',
+    color: '#0c0c0c',
+  },
+  rowSpacer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
 });
-
-export default PreferencesForm;

@@ -20,7 +20,7 @@ export const MainView: React.FC<MainViewProps> = ({ users, currentIndex, handleS
     <View style={[styles.swiperContainer]}>
       <Swiper
         cards={users}
-        renderCard={(card) => <ProfileCard bottomMargin={100} user={card}/>}
+        renderCard={(card) => <ProfileCard bottomMargin={200} user={card}/>}
         onSwipedLeft={handleSwipeLeft}
         onSwipedRight={handleSwipeRight}
         cardIndex={currentIndex}

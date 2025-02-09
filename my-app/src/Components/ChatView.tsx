@@ -8,7 +8,6 @@ import {
   ImageBackground,
   StyleSheet,
 } from "react-native";
-// import BG from "../../../assets/images/BG.png";
 
 type Message = {
   id: string;
@@ -37,10 +36,21 @@ const ChatView = () => {
       setNewMessage("");
     }
   };
-  const bg = {uri: '../../../assets/images/BG.png'};
+
+  const bg = { uri: '../../../assets/images/BG.png' };
+
   return (
     <ImageBackground style={styles.background} source={bg}>
-      {/* <FlatList data={messages} renderItem={({ item }) => <ChatMessage message={item} />} inverted /> */}
+      <FlatList
+        data={messages}
+        renderItem={({ item }) => (
+          <View style={item.sent ? styles.sentMessage : styles.receivedMessage}>
+            <Text style={styles.messageText}>{item.text}</Text>
+            <Text style={styles.messageTime}>{item.time}</Text>
+          </View>
+        )}
+        inverted
+      />
       <View style={styles.messageInputContainer}>
         <TextInput
           style={styles.input}
@@ -85,6 +95,28 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: "#fff",
     fontWeight: "bold",
+  },
+  sentMessage: {
+    alignSelf: "flex-end",
+    backgroundColor: "#007bff",
+    padding: 8,
+    borderRadius: 8,
+    margin: 4,
+  },
+  receivedMessage: {
+    alignSelf: "flex-start",
+    backgroundColor: "#a1a11",
+    padding: 8,
+    borderRadius: 8,
+    margin: 4,
+  },
+  messageText: {
+    color: "#fff",
+  },
+  messageTime: {
+    fontSize: 12,
+    color: "#ccc",
+    marginTop: 4,
   },
 });
 

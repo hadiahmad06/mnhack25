@@ -1,6 +1,6 @@
 // src/Profile.ts
 
-export type Gender = 'male' | 'female' | 'nb' | 'other';
+// export type Gender = 'male' | 'female' | 'nb' | 'other';
 
 export interface Preferences {
   minRiders: number;
@@ -10,7 +10,7 @@ export interface Preferences {
   maxAge: number; // 0 means no preference
 
   verification: boolean;
-  genderPreferences: { gender: Gender; preferred: boolean }[];
+  genderPreferences: { gender: string; preferred: boolean }[];
 
   maxExtraTime?: number; // Optional
 }
@@ -22,7 +22,7 @@ export interface Rating {
 export interface Location {
   latitude: number;
   longitude: number;
-  address?: string;
+  city?: string;
 }
 
 export interface Profile {
@@ -32,7 +32,7 @@ export interface Profile {
   image?: string;
 
   age: number;
-  gender: Gender;
+  gender: string;
 
   verification: boolean;
 

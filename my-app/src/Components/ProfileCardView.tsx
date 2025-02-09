@@ -11,6 +11,8 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
     return <Text style={styles.noDataText}>No profile data available.</Text>;
   }
 
+  //const dir = null;//user.image ? require(`../../../assets/example_profiles/${user.image}`) : null;
+
   return (
     <View style={styles.cardContainer}>
       {/* Profile Image */}
@@ -25,21 +27,27 @@ export const ProfileCard = ({bottomMargin, user}: {bottomMargin: number, user: P
       </View>
 
       {/* Profile Details */}
-      <View style={styles.detailsContainer}>
-        <Text style={styles.username}>{user.name}</Text>
-        <Text style={styles.detailText}>Age: {user.age}</Text>
-        <Text style={styles.detailText}>Gender: {user.gender}</Text>
+      <View style={[styles.detailsContainer, {justifyContent: "space-between", flexDirection: "column"}]}>
+        <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <View style={{flexDirection: "row", alignItems: "center"}}>
+            <Text style={styles.username}>{user.name}</Text>
+          </View>
+          <View style={{flexDirection: "row"}}>
+            <Text style={styles.upvotes}>▲ {user.up} </Text>
+            <Text style={styles.downvotes}>{user.down} ▼</Text>
+          </View>
+        </View>
+        <Text style={styles.detailText}>{user.gender}, {user.age}</Text>
         <Text
           style={[
             styles.verificationText,
             user.verification ? styles.verified : styles.notVerified,
-          ]}
+            {marginBottom: bottomMargin}]}
         >
-          {user.verification ? "Verified" : "Not Verified"}
+          {user.verification ? "✓" : "⚠️ Unverified"}
         </Text>
-        <Text style={styles.ratingsHeader}>Ratings</Text>
-        <Text style={styles.upvotes}>👍 {user.up} Upvotes</Text>
-        <Text style={styles.downvotes}>👎 {user.down} Downvotes</Text>
+
+        {user.down > user.up && <Text style = {styles.flag}>🚩</Text>}
       </View>
     </View>
   );
@@ -56,7 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f0f0f0", // Light gray background for the image area
+    backgroundColor: "#f0f0f0",
   },
   profileImage: {
     width: "100%",
@@ -68,7 +76,7 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ccc", // Gray background for empty image
+    backgroundColor: "#ccc",
   },
   emptyImageText: {
     fontSize: 18,
@@ -86,38 +94,46 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#1a202c", // Gray-900 equivalent
-    marginBottom: 8,
+    color: "#1a202c",
+    marginRight: 8,
   },
   detailText: {
     fontSize: 16,
-    color: "#4a5568", // Gray-600 equivalent
-    marginBottom: 4,
+    color: "#4a5568",
+    marginTop: 4,
   },
   verificationText: {
-    fontSize: 14,
+    fontSize: 35,
     fontWeight: "600",
-    marginTop: 8,
+    marginBottom: 8,
   },
   verified: {
     color: "green",
   },
   notVerified: {
-    color: "red",
+    color: "#ffd300",
   },
   ratingsHeader: {
     fontSize: 18,
     fontWeight: "600",
     marginTop: 16,
-    color: "#1a202c", // Gray-900 equivalent
+    color: "#1a202c",
   },
   upvotes: {
+    fontSize: 24,
     color: "green",
     marginTop: 4,
+    marginRight: 12,
   },
   downvotes: {
+    fontSize: 24,
     color: "red",
     marginTop: 4,
+  },
+  flag: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 8,
   },
 });
 
