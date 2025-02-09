@@ -1,9 +1,17 @@
+// App.tsx
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Button } from "react-native";
-import Swiper from "react-native-deck-swiper";
-import { ProfileCard } from "./my-app/src/Components/ProfileCard";
-import { Profile, Location } from "./my-app/src/Models/Profile";
-import ChatView from "./my-app/src/Components/ChatView";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { Preferences, Profile, Location } from "./my-app/src/Models/Profile";
+import { PreferencesForm } from "./my-app/src/Components/PreferencesView";
+import { MainView } from "./my-app/src/Components/MainView"
+import { ChatMenuView } from "./my-app/src/Components/ChatMenuView";
+import FooterView from "./my-app/src/Components/FooterView";
 
 // Example user data
 const LA: Location = {
@@ -12,8 +20,32 @@ const LA: Location = {
   address: "5128, Washington Ave",
 };
 
+const open: Preferences = {
+  minRiders: 1,
+    maxRiders: 0,
+    minAge: 0,
+    maxAge: 0,
+    verification: false,
+    genderPreferences: [],
+    maxExtraTime: 0,
+}
+
+const currUser: Profile = {
+  preferences: open,
+  name: "John Doe",
+  age: 28,
+  gender: "male",
+  verification: true,
+  up: 120,
+  down: 5,
+  ratings: [],
+  origin: LA,
+  destinations: [LA]
+}
+
 const exampleUsers: Profile[] = [
   {
+    preferences: open,
     name: "John Doe",
     age: 28,
     gender: "male",
@@ -25,6 +57,7 @@ const exampleUsers: Profile[] = [
     destinations: [LA],
   },
   {
+    preferences: open,
     name: "Jane Smith",
     age: 25,
     gender: "female",
@@ -36,6 +69,7 @@ const exampleUsers: Profile[] = [
     destinations: [LA],
   },
   {
+    preferences: open,
     name: "Alice Johnson",
     age: 30,
     gender: "female",
@@ -52,106 +86,79 @@ const exampleUsers: Profile[] = [
 const App = () => {
   const [users, setUsers] = useState(exampleUsers);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showChat, setShowChat] = useState(false);
+  const [openChats, setOpenChats] = useState<Profile[]>([]);
+  const [activeTab, setActiveTab] = useState<"chats" | "main" | "settings">("main");
   const [currentUser, setCurrentUser] = useState<Profile | null>(null);
+
 
   const handleSwipeLeft = () => {
     if (currentIndex < users.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Reset to the first user if we reach the end
       setCurrentIndex(0);
     }
   };
 
   const handleSwipeRight = () => {
-    setCurrentUser(users[currentIndex]);
-    setShowChat(true);
+    const swipedUser = users[currentIndex];
+    setOpenChats((prev) => [...prev, swipedUser]);
+    handleSwipeLeft();
+  };
+
+  const handleOpenChat = (user: Profile) => {
+    setCurrentUser(user);
+    setActiveTab("chats");
   };
 
   const handleBack = () => {
-    setShowChat(false);
     setCurrentUser(null);
-    handleSwipeLeft(); // Move to the next user after closing the chat
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {showChat && currentUser ? (
-        <View style={styles.chatContainer}>
-          <ChatView />
-          <Button title="Back to Swipe" onPress={handleBack} />
-        </View>
-      ) : (
-        <View style={styles.swiperContainer}>
-          <Swiper
-            cards={users}
-            renderCard={(card) => <ProfileCard user={card} />}
-            onSwipedLeft={handleSwipeLeft}
-            onSwipedRight={handleSwipeRight}
-            cardIndex={currentIndex}
-            stackSize={3}
-            infinite // Loop through users
-            backgroundColor="transparent"
-            cardVerticalMargin={0}
-            cardHorizontalMargin={0}
-            overlayLabels={{
-              left: {
-                title: "NOPE",
-                style: {
-                  label: {
-                    backgroundColor: "red",
-                    borderColor: "red",
-                    color: "white",
-                    borderWidth: 1,
-                  },
-                  wrapper: {
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    justifyContent: "flex-start",
-                    marginTop: 30,
-                    marginLeft: -30,
-                  },
-                },
-              },
-              right: {
-                title: "CHAT",
-                style: {
-                  label: {
-                    backgroundColor: "green",
-                    borderColor: "green",
-                    color: "white",
-                    borderWidth: 1,
-                  },
-                  wrapper: {
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    justifyContent: "flex-start",
-                    marginTop: 30,
-                    marginLeft: 30,
-                  },
-                },
-              },
+      {activeTab === "main" ? (
+        <MainView 
+          users={users} 
+          currentIndex={currentIndex} 
+          handleSwipeLeft={handleSwipeLeft} 
+          handleSwipeRight={handleSwipeRight} 
+          currUser={currUser} // Pass currUser to MainView
+          setCurrentUser={setCurrentUser}
+        />
+      ) : activeTab === "chats" ? (
+        <ChatMenuView
+          openChats={openChats}
+          handleOpenChat={handleOpenChat}
+          currentUser={currentUser}
+          handleBack={handleBack}
+        />
+      ) : activeTab === "settings" ? (
+        <View style={styles.settingsContainer}>
+          <PreferencesForm
+            prefs={currUser.preferences}
+            onSave={(updatedPrefs) => {
+              setCurrentUser((prev) => (prev ? { ...prev, preferences: updatedPrefs } : null));
+              console.log("Updated Preferences:", updatedPrefs);
             }}
           />
         </View>
-      )}
+      ) : null}
+
+      <FooterView activeTab={activeTab} onTabPress={setActiveTab} />
     </SafeAreaView>
   );
 };
 
-// Styles
+// Styles (Mostly unchanged, you might want to adjust based on MainView/ChatMenuView)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
-  swiperContainer: {
+  settingsContainer: { // Keep this in App.tsx
     flex: 1,
-  },
-  chatContainer: {
-    flex: 1,
-    padding: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -26,8 +26,10 @@ export interface Location {
 }
 
 export interface Profile {
+  preferences: Preferences;
+
   name: string;
-  imageID?: string;
+  image?: string;
 
   age: number;
   gender: Gender;
