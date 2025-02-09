@@ -2,7 +2,8 @@
 
 import React from 'react';
 import './App.css';
-import MapComponent from './MapComponent'; // Import the MapComponent
+import MapService from '../Services/MapService'; // Import the MapComponent
+
 
 function App() {
   return (

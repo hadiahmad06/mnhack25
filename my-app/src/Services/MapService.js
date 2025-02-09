@@ -1,4 +1,4 @@
-// src/MapComponent.js
+// src/MapService.js
 
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl';
 // Set your Mapbox access token
 mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
 
-const MapComponent = () => {
+const MapService = () => {
   // Ref to hold the map container element
   const mapContainer = useRef(null);
 
@@ -34,4 +34,4 @@ const MapComponent = () => {
   );
 };
 
-export default MapComponent;
+export default MapService;
